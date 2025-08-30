@@ -9,12 +9,24 @@ echo.
 REM Check if actual config exists
 if exist "js\firebase-config-actual.js" (
     echo ✅ Firebase config file already exists
+    echo.
+    :askReplace
     set /p replace="Do you want to replace it with new config? (y/n): "
-    if /i not "%replace%"=="y" (
-        echo Setup cancelled.
-        pause
-        exit /b 0
-    )
+    if /i "%replace%"=="y" goto :proceed
+    if /i "%replace%"=="yes" goto :proceed
+    if /i "%replace%"=="n" goto :cancel
+    if /i "%replace%"=="no" goto :cancel
+    echo Please enter 'y' for yes or 'n' for no
+    goto :askReplace
+    
+    :cancel
+    echo Setup cancelled.
+    pause
+    exit /b 0
+    
+    :proceed
+    echo Proceeding to replace existing config...
+    del "js\firebase-config-actual.js"
 )
 
 echo.
