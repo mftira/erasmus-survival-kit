@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Erasmus Survival Kit</title>
+    <meta name="description" content="Your comprehensive guide for the Erasmus experience. Manage personal tasks, access shared resources, and stay organized throughout your journey.">
+    <meta name="keywords" content="erasmus, student, travel, dashboard, checklist, study abroad">
+    <meta name="author" content="Erasmus Survival Kit">
+    
+    <!-- PWA Manifest -->
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#2563eb">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <meta name="apple-mobile-web-app-title" content="Erasmus Kit">
+    
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://yourusername.github.io/erasmus-survival-kit/">
+    <meta property="og:title" content="Erasmus Survival Kit">
+    <meta property="og:description" content="Your comprehensive guide for the Erasmus experience">
+    
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:url" content="https://yourusername.github.io/erasmus-survival-kit/">
+    <meta property="twitter:title" content="Erasmus Survival Kit">
+    <meta property="twitter:description" content="Your comprehensive guide for the Erasmus experience">
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMzIiIGhlaWdodD0iMzIiIHZpZXdCb3g9IjAgMCAzMiAzMiIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHJlY3Qgd2lkdGg9IjMyIiBoZWlnaHQ9IjMyIiByeD0iNCIgZmlsbD0iIzI1NjNlYiIvPgo8cGF0aCBkPSJNMTYgOGM0IDAgNy41IDIuNSA4IDZsLTEuNSAwLjVjLTAuNS0yLjUtMy0xMC01LjUtNXMtNSAyLjUtNS41IDVMOSAxMGMwIDAgMC41IDAgMS41IDAgMS41IDAgMiAxIDIgMS41czEgMSAxIDEuNXoiIGZpbGw9IndoaXRlIi8+Cjwvc3ZnPgo=">
+    
+    <!-- External Dependencies -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.11.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.11.1/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.11.1/firebase-firestore-compat.js"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body class="bg-gray-50 min-h-screen">
+    <!-- Navigation -->
+    <nav id="navbar" class="bg-blue-600 text-white shadow-lg hidden">
+        <div class="container mx-auto px-4 py-3">
+            <div class="flex justify-between items-center">
+                <div class="flex items-center space-x-2">
+                    <i class="fas fa-graduation-cap text-2xl"></i>
+                    <h1 class="text-xl font-bold">Erasmus Survival Kit</h1>
+                </div>
+                <div class="flex space-x-6">
+                    <a href="#" onclick="showHome()" class="hover:text-blue-200 transition-colors">
+                        <i class="fas fa-home mr-1"></i>Home
+                    </a>
+                    <a href="#" onclick="showDashboard()" class="hover:text-blue-200 transition-colors">
+                        <i class="fas fa-user mr-1"></i>My Dashboard
+                    </a>
+                    <a href="#" onclick="showCommon()" class="hover:text-blue-200 transition-colors">
+                        <i class="fas fa-users mr-1"></i>Common Section
+                    </a>
+                    <a href="#" onclick="logout()" class="hover:text-red-200 transition-colors">
+                        <i class="fas fa-sign-out-alt mr-1"></i>Logout
+                    </a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Login Section -->
+    <div id="loginSection" class="flex items-center justify-center min-h-screen">
+        <div class="bg-white p-8 rounded-lg shadow-lg max-w-md w-full mx-4">
+            <div class="text-center mb-8">
+                <i class="fas fa-graduation-cap text-6xl text-blue-600 mb-4"></i>
+                <h1 class="text-3xl font-bold text-gray-800 mb-2">Erasmus Survival Kit</h1>
+                <p class="text-gray-600">Your journey starts here</p>
+            </div>
+            
+            <div class="space-y-4">
+                <form id="emailForm" class="space-y-4">
+                    <input type="email" id="email" placeholder="Enter your email" required 
+                           class="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    <input type="password" id="password" placeholder="Enter your password" required 
+                           class="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    <button type="submit" class="w-full bg-blue-600 text-white py-3 px-4 rounded-lg hover:bg-blue-700 transition-colors">
+                        <i class="fas fa-sign-in-alt mr-2"></i>
+                        Sign In
+                    </button>
+                </form>
+                
+                <div class="text-center text-sm text-gray-600">
+                    Use the credentials provided by your Erasmus coordinator
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div id="mainContent" class="hidden">
+        <!-- Home Section -->
+        <div id="homeSection" class="container mx-auto px-4 py-8">
+            <div class="max-w-4xl mx-auto">
+                <div class="bg-white rounded-lg shadow-lg p-8 mb-8">
+                    <div class="text-center">
+                        <i class="fas fa-graduation-cap text-6xl text-blue-600 mb-4"></i>
+                        <h1 class="text-4xl font-bold text-gray-800 mb-4">Welcome to Erasmus Survival Kit!</h1>
+                        <p class="text-lg text-gray-600 mb-8">Your comprehensive guide for the Erasmus experience</p>
+                    </div>
+                    
+                    <!-- Countdown Timer -->
+                    <div class="bg-gradient-to-r from-blue-500 to-purple-600 text-white p-6 rounded-lg mb-8">
+                        <h2 class="text-2xl font-bold text-center mb-4">
+                            <i class="fas fa-clock mr-2"></i>Countdown to Departure
+                        </h2>
+                        <div id="countdown" class="text-center text-3xl font-bold"></div>
+                        <p class="text-center mt-2 opacity-90">September 22, 2025</p>
+                    </div>
+                    
+                    <!-- Quick Access Cards -->
+                    <div class="grid md:grid-cols-2 gap-6">
+                        <div class="bg-blue-50 p-6 rounded-lg border border-blue-200">
+                            <h3 class="text-xl font-bold text-blue-800 mb-3">
+                                <i class="fas fa-user mr-2"></i>Personal Dashboard
+                            </h3>
+                            <p class="text-blue-600 mb-4">Track your personal tasks, notes, and documents</p>
+                            <button onclick="showDashboard()" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition-colors">
+                                Go to Dashboard
+                            </button>
+                        </div>
+                        
+                        <div class="bg-green-50 p-6 rounded-lg border border-green-200">
+                            <h3 class="text-xl font-bold text-green-800 mb-3">
+                                <i class="fas fa-users mr-2"></i>Common Section
+                            </h3>
+                            <p class="text-green-600 mb-4">Access shared documents, tips, and group tasks</p>
+                            <button onclick="showCommon()" class="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700 transition-colors">
+                                Explore Common Area
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Dashboard Section -->
+        <div id="dashboardSection" class="container mx-auto px-4 py-8 hidden">
+            <div class="max-w-6xl mx-auto">
+                <h1 class="text-3xl font-bold text-gray-800 mb-8">
+                    <i class="fas fa-user mr-3"></i>My Personal Dashboard
+                </h1>
+                
+                <!-- Progress Overview -->
+                <div class="bg-white rounded-lg shadow-lg p-6 mb-8">
+                    <h2 class="text-xl font-bold text-gray-800 mb-4">Progress Overview</h2>
+                    <div class="bg-gray-200 rounded-full h-4 mb-2">
+                        <div id="progressBar" class="bg-blue-600 h-4 rounded-full transition-all duration-300" style="width: 0%"></div>
+                    </div>
+                    <p class="text-sm text-gray-600"><span id="progressText">0% Complete</span></p>
+                </div>
+                
+                <!-- Dashboard Grid -->
+                <div class="grid lg:grid-cols-2 gap-8">
+                    <!-- Personal Checklist -->
+                    <div class="bg-white rounded-lg shadow-lg p-6">
+                        <div class="flex justify-between items-center mb-4">
+                            <h2 class="text-xl font-bold text-gray-800">
+                                <i class="fas fa-check-square mr-2"></i>Personal Checklist
+                            </h2>
+                            <button onclick="addPersonalTask()" class="bg-blue-600 text-white px-3 py-1 rounded hover:bg-blue-700 transition-colors">
+                                <i class="fas fa-plus mr-1"></i>Add Task
+                            </button>
+                        </div>
+                        <div id="personalChecklist" class="space-y-2 max-h-64 overflow-y-auto"></div>
+                    </div>
+                    
+                    <!-- Notes Section -->
+                    <div class="bg-white rounded-lg shadow-lg p-6">
+                        <h2 class="text-xl font-bold text-gray-800 mb-4">
+                            <i class="fas fa-sticky-note mr-2"></i>My Notes
+                        </h2>
+                        <textarea id="personalNotes" placeholder="Write your notes here..." 
+                                  class="w-full h-48 p-3 border border-gray-300 rounded-lg resize-none focus:outline-none focus:ring-2 focus:ring-blue-500"></textarea>
+                        <button onclick="saveNotes()" class="mt-3 bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700 transition-colors">
+                            <i class="fas fa-save mr-1"></i>Save Notes
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Common Section -->
+        <div id="commonSection" class="container mx-auto px-4 py-8 hidden">
+            <div class="max-w-6xl mx-auto">
+                <h1 class="text-3xl font-bold text-gray-800 mb-8">
+                    <i class="fas fa-users mr-3"></i>Common Section
+                </h1>
+                
+                <!-- Tab Navigation -->
+                <div class="bg-white rounded-lg shadow-lg mb-8">
+                    <div class="border-b border-gray-200">
+                        <nav class="flex space-x-8 px-6">
+                            <button onclick="showCommonTab('documents')" class="common-tab-btn py-4 text-sm font-medium border-b-2 border-transparent hover:text-blue-600 hover:border-blue-300 active" data-tab="documents">
+                                <i class="fas fa-file-alt mr-1"></i>Documents Hub
+                            </button>
+                            <button onclick="showCommonTab('checklist')" class="common-tab-btn py-4 text-sm font-medium border-b-2 border-transparent hover:text-blue-600 hover:border-blue-300" data-tab="checklist">
+                                <i class="fas fa-tasks mr-1"></i>Shared Checklist
+                            </button>
+                            <button onclick="showCommonTab('tips')" class="common-tab-btn py-4 text-sm font-medium border-b-2 border-transparent hover:text-blue-600 hover:border-blue-300" data-tab="tips">
+                                <i class="fas fa-lightbulb mr-1"></i>Tips & Tricks
+                            </button>
+                            <button onclick="showCommonTab('timeline')" class="common-tab-btn py-4 text-sm font-medium border-b-2 border-transparent hover:text-blue-600 hover:border-blue-300" data-tab="timeline">
+                                <i class="fas fa-calendar-alt mr-1"></i>Timeline
+                            </button>
+                        </nav>
+                    </div>
+                    
+                    <!-- Tab Content -->
+                    <div class="p-6">
+                        <!-- Documents Hub -->
+                        <div id="documentsTab" class="common-tab-content">
+                            <div class="mb-4">
+                                <input type="text" id="documentsSearch" placeholder="Search documents..." 
+                                       class="w-full max-w-md p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                            </div>
+                            <div id="documentsHub" class="grid md:grid-cols-2 lg:grid-cols-3 gap-6"></div>
+                        </div>
+                        
+                        <!-- Shared Checklist -->
+                        <div id="checklistTab" class="common-tab-content hidden">
+                            <div class="mb-4">
+                                <div class="bg-gray-100 p-4 rounded-lg">
+                                    <div class="flex justify-between items-center">
+                                        <span class="font-medium">Group Progress:</span>
+                                        <span id="sharedProgress" class="text-blue-600 font-bold">0% Complete</span>
+                                    </div>
+                                    <div class="bg-gray-200 rounded-full h-2 mt-2">
+                                        <div id="sharedProgressBar" class="bg-green-600 h-2 rounded-full transition-all duration-300" style="width: 0%"></div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div id="sharedChecklist" class="space-y-3"></div>
+                        </div>
+                        
+                        <!-- Tips & Tricks -->
+                        <div id="tipsTab" class="common-tab-content hidden">
+                            <div class="mb-4">
+                                <input type="text" id="tipsSearch" placeholder="Search tips..." 
+                                       class="w-full max-w-md p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                            </div>
+                            <div id="tipsContainer" class="space-y-4"></div>
+                        </div>
+                        
+                        <!-- Timeline -->
+                        <div id="timelineTab" class="common-tab-content hidden">
+                            <div id="timelineContainer" class="space-y-6"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="js/firebase-config-actual.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/database.js"></script>
+    <script src="js/app.js"></script>
+</body>
+</html>
