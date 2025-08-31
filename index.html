@@ -216,9 +216,13 @@
                     <div class="p-6">
                         <!-- Documents Hub -->
                         <div id="documentsTab" class="common-tab-content">
-                            <div class="mb-4">
+                            <div class="mb-4 flex justify-between items-center">
                                 <input type="text" id="documentsSearch" placeholder="Search documents..." 
-                                       class="w-full max-w-md p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                                       class="flex-1 max-w-md p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                                <button onclick="addDocument()" 
+                                        class="ml-4 bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg font-medium">
+                                    <i class="fas fa-plus mr-2"></i>Add Document
+                                </button>
                             </div>
                             <div id="documentsHub" class="grid md:grid-cols-2 lg:grid-cols-3 gap-6"></div>
                         </div>
@@ -236,20 +240,36 @@
                                     </div>
                                 </div>
                             </div>
+                            <div class="mb-4">
+                                <button onclick="addSharedTask()" 
+                                        class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg font-medium">
+                                    <i class="fas fa-plus mr-2"></i>Add Shared Task
+                                </button>
+                            </div>
                             <div id="sharedChecklist" class="space-y-3"></div>
                         </div>
                         
                         <!-- Tips & Tricks -->
                         <div id="tipsTab" class="common-tab-content hidden">
-                            <div class="mb-4">
+                            <div class="mb-4 flex justify-between items-center">
                                 <input type="text" id="tipsSearch" placeholder="Search tips..." 
-                                       class="w-full max-w-md p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                                       class="flex-1 max-w-md p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                                <button onclick="addTip()" 
+                                        class="ml-4 bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg font-medium">
+                                    <i class="fas fa-plus mr-2"></i>Add Tip
+                                </button>
                             </div>
                             <div id="tipsContainer" class="space-y-4"></div>
                         </div>
                         
                         <!-- Timeline -->
                         <div id="timelineTab" class="common-tab-content hidden">
+                            <div class="mb-4">
+                                <button onclick="addTimelineEvent()" 
+                                        class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg font-medium">
+                                    <i class="fas fa-plus mr-2"></i>Add Event
+                                </button>
+                            </div>
                             <div id="timelineContainer" class="space-y-6"></div>
                         </div>
                     </div>

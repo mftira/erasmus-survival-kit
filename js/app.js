@@ -148,28 +148,30 @@ function createChecklistItem(item, index, type) {
     const priorityColor = item.priority === 'high' ? 'text-red-600' : 
                          item.priority === 'medium' ? 'text-yellow-600' : 'text-green-600';
     
+    const toggleFunction = type === 'personal' ? 'personalTaskToggle' : 'sharedTaskToggle';
+    const deleteFunction = type === 'personal' ? 'deletePersonalTask' : 'deleteSharedTask';
+    
     div.innerHTML = `
         <div class="flex items-center justify-between">
             <div class="flex items-center flex-1">
                 <input type="checkbox" ${item.completed ? 'checked' : ''} 
-                       onchange="${type}TaskToggle(${index})" 
+                       onchange="${toggleFunction}(${index})" 
                        class="mr-3 h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded">
                 <span class="task-text flex-1 ${item.completed ? 'line-through text-gray-500' : ''}">${item.text}</span>
                 ${item.priority ? `<span class="text-xs ${priorityColor} font-medium ml-2">${item.priority}</span>` : ''}
             </div>
-            ${type === 'personal' ? `
-                <button onclick="deletePersonalTask(${index})" 
-                        class="ml-2 text-red-500 hover:text-red-700 text-sm">
-                    <i class="fas fa-trash"></i>
-                </button>
-            ` : ''}
+            <button onclick="${deleteFunction}(${index})" 
+                    class="ml-2 text-red-500 hover:text-red-700 text-sm">
+                <i class="fas fa-trash"></i>
+            </button>
         </div>
+        ${item.createdBy && type === 'shared' ? `<div class="text-xs text-gray-500 mt-1 ml-7">Added by: ${item.createdBy}</div>` : ''}
     `;
     
     return div;
 }
 
-function createDocumentCard(doc) {
+function createDocumentCard(doc, index) {
     const div = document.createElement('div');
     div.className = 'document-card bg-white p-6 rounded-lg shadow-md border border-gray-200';
     
@@ -183,11 +185,18 @@ function createDocumentCard(doc) {
                 <p class="text-gray-600 text-sm mb-3">${doc.description}</p>
                 <div class="flex justify-between items-center">
                     <span class="category text-xs bg-blue-100 text-blue-800 px-2 py-1 rounded">${doc.category}</span>
-                    <a href="${doc.url}" target="_blank" 
-                       class="text-blue-600 hover:text-blue-800 text-sm font-medium">
-                        <i class="fas fa-external-link-alt mr-1"></i>Open
-                    </a>
+                    <div class="flex space-x-2">
+                        <a href="${doc.url}" target="_blank" 
+                           class="text-blue-600 hover:text-blue-800 text-sm font-medium">
+                            <i class="fas fa-external-link-alt mr-1"></i>Open
+                        </a>
+                        <button onclick="deleteDocument(${index})" 
+                                class="text-red-600 hover:text-red-800 text-sm font-medium">
+                            <i class="fas fa-trash mr-1"></i>Delete
+                        </button>
+                    </div>
                 </div>
+                ${doc.createdBy ? `<div class="text-xs text-gray-500 mt-2">Added by: ${doc.createdBy}</div>` : ''}
             </div>
         </div>
     `;
@@ -195,7 +204,7 @@ function createDocumentCard(doc) {
     return div;
 }
 
-function createTipCard(tip) {
+function createTipCard(tip, index) {
     const div = document.createElement('div');
     div.className = 'tip-card bg-white p-6 rounded-lg shadow-md border border-gray-200';
     
@@ -205,9 +214,16 @@ function createTipCard(tip) {
             <div class="flex-1">
                 <div class="flex justify-between items-start mb-2">
                     <h3 class="text-lg font-semibold text-gray-800">${tip.title}</h3>
-                    <span class="category text-xs bg-green-100 text-green-800 px-2 py-1 rounded">${tip.category}</span>
+                    <div class="flex items-center space-x-2">
+                        <span class="category text-xs bg-green-100 text-green-800 px-2 py-1 rounded">${tip.category}</span>
+                        <button onclick="deleteTip(${index})" 
+                                class="text-red-600 hover:text-red-800 text-sm">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </div>
                 </div>
                 <p class="text-gray-600">${tip.content}</p>
+                ${tip.createdBy ? `<div class="text-xs text-gray-500 mt-2">Added by: ${tip.createdBy}</div>` : ''}
             </div>
         </div>
     `;
@@ -215,7 +231,7 @@ function createTipCard(tip) {
     return div;
 }
 
-function createTimelineEvent(event) {
+function createTimelineEvent(event, index) {
     const div = document.createElement('div');
     const eventDate = new Date(event.date);
     const now = new Date();
@@ -235,15 +251,24 @@ function createTimelineEvent(event) {
         <div class="bg-white p-4 rounded-lg shadow-md border border-gray-200">
             <div class="flex justify-between items-start mb-2">
                 <h3 class="text-lg font-semibold text-gray-800">${event.title}</h3>
-                <div class="text-right">
-                    <div class="text-sm text-gray-500">${formatDate(eventDate)}</div>
-                    ${event.priority ? `<span class="text-xs ${priorityColor} font-medium">${event.priority}</span>` : ''}
+                <div class="text-right flex items-center space-x-2">
+                    <div>
+                        <div class="text-sm text-gray-500">${formatDate(eventDate)}</div>
+                        ${event.priority ? `<span class="text-xs ${priorityColor} font-medium">${event.priority}</span>` : ''}
+                    </div>
+                    <button onclick="deleteTimelineEvent(${index})" 
+                            class="text-red-600 hover:text-red-800 text-sm">
+                        <i class="fas fa-trash"></i>
+                    </button>
                 </div>
             </div>
             <p class="text-gray-600">${event.description}</p>
-            <div class="mt-2 text-xs text-gray-500">
-                ${isUpcoming ? `In ${Math.ceil((eventDate - now) / (1000 * 60 * 60 * 24))} days` : 
-                  isPast ? 'Completed' : 'Today'}
+            <div class="mt-2 flex justify-between items-center">
+                <div class="text-xs text-gray-500">
+                    ${isUpcoming ? `In ${Math.ceil((eventDate - now) / (1000 * 60 * 60 * 24))} days` : 
+                      isPast ? 'Completed' : 'Today'}
+                </div>
+                ${event.createdBy ? `<div class="text-xs text-gray-500">Added by: ${event.createdBy}</div>` : ''}
             </div>
         </div>
     `;
