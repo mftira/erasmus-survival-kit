@@ -237,6 +237,23 @@ function createTimelineEvent(event, index) {
 }
 
 // Utility Functions
+function getUserDisplayName() {
+    if (!currentUser) return 'Unknown User';
+    
+    // Try display name first
+    if (currentUser.displayName) {
+        return currentUser.displayName;
+    }
+    
+    // Extract name from email
+    if (currentUser.email) {
+        const emailName = currentUser.email.split('@')[0];
+        return emailName.charAt(0).toUpperCase() + emailName.slice(1);
+    }
+    
+    return 'Erasmus Student';
+}
+
 function formatDate(date) {
     return date.toLocaleDateString('en-US', {
         weekday: 'short',
@@ -284,7 +301,272 @@ document.addEventListener('DOMContentLoaded', () => {
     if (mobileMenuBtn) {
         mobileMenuBtn.addEventListener('click', toggleMobileMenu);
     }
+    
+    // Setup modal form handlers
+    setupModalForms();
 });
+
+// Setup modal form handlers
+function setupModalForms() {
+    // Document form
+    const docForm = document.getElementById('addDocumentForm');
+    if (docForm) {
+        docForm.addEventListener('submit', handleAddDocument);
+    }
+    
+    // Task form
+    const taskForm = document.getElementById('addTaskForm');
+    if (taskForm) {
+        taskForm.addEventListener('submit', handleAddTask);
+    }
+    
+    // Tip form
+    const tipForm = document.getElementById('addTipForm');
+    if (tipForm) {
+        tipForm.addEventListener('submit', handleAddTip);
+    }
+    
+    // Event form
+    const eventForm = document.getElementById('addEventForm');
+    if (eventForm) {
+        eventForm.addEventListener('submit', handleAddEvent);
+    }
+    
+    // Close modals when clicking outside
+    document.addEventListener('click', (e) => {
+        if (e.target.classList.contains('bg-opacity-50')) {
+            const modals = ['addDocumentModal', 'addTaskModal', 'addTipModal', 'addEventModal'];
+            modals.forEach(modalId => {
+                const modal = document.getElementById(modalId);
+                if (modal && !modal.classList.contains('hidden')) {
+                    closeModal(modalId);
+                }
+            });
+        }
+    });
+    
+    // Close modals with Escape key
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape') {
+            const modals = ['addDocumentModal', 'addTaskModal', 'addTipModal', 'addEventModal'];
+            modals.forEach(modalId => {
+                const modal = document.getElementById(modalId);
+                if (modal && !modal.classList.contains('hidden')) {
+                    closeModal(modalId);
+                }
+            });
+        }
+    });
+}
+
+// Modal management functions
+function openModal(modalId) {
+    const modal = document.getElementById(modalId);
+    if (modal) {
+        modal.classList.remove('hidden');
+        // Focus on first input
+        const firstInput = modal.querySelector('input, textarea, select');
+        if (firstInput) {
+            setTimeout(() => firstInput.focus(), 100);
+        }
+    }
+}
+
+function closeModal(modalId) {
+    const modal = document.getElementById(modalId);
+    if (modal) {
+        modal.classList.add('hidden');
+        // Reset form
+        const form = modal.querySelector('form');
+        if (form) {
+            form.reset();
+        }
+    }
+}
+
+// Form submission handlers
+async function handleAddDocument(e) {
+    e.preventDefault();
+    
+    const title = document.getElementById('docTitle').value.trim();
+    const description = document.getElementById('docDescription').value.trim();
+    const url = document.getElementById('docUrl').value.trim();
+    const category = document.getElementById('docCategory').value;
+    const icon = document.getElementById('docIcon').value;
+    
+    if (!title || !description || !url || !category) {
+        showToast('Please fill in all required fields', 'error');
+        return;
+    }
+    
+    if (!currentUser) {
+        showToast('You must be logged in to add documents', 'error');
+        return;
+    }
+    
+    try {
+        const commonRef = db.collection('common').doc('data');
+        const commonDoc = await commonRef.get();
+        const commonData = commonDoc.data() || {};
+        const documents = commonData.documents || [];
+        
+        const newDocument = {
+            id: Date.now().toString(),
+            title,
+            description,
+            url,
+            category,
+            icon: icon || 'fas fa-file-alt',
+            createdAt: new Date().toISOString(),
+            createdBy: getUserDisplayName()
+        };
+        
+        documents.push(newDocument);
+        
+        await commonRef.set({ ...commonData, documents }, { merge: true });
+        await loadDocumentsHub();
+        closeModal('addDocumentModal');
+        showToast('Document added successfully!', 'success');
+    } catch (error) {
+        console.error('Error adding document:', error);
+        showToast('Failed to add document', 'error');
+    }
+}
+
+async function handleAddTask(e) {
+    e.preventDefault();
+    
+    const text = document.getElementById('taskText').value.trim();
+    const priority = document.getElementById('taskPriority').value;
+    
+    if (!text) {
+        showToast('Please enter a task description', 'error');
+        return;
+    }
+    
+    if (!currentUser) {
+        showToast('You must be logged in to add tasks', 'error');
+        return;
+    }
+    
+    try {
+        const commonRef = db.collection('common').doc('data');
+        const commonDoc = await commonRef.get();
+        const commonData = commonDoc.data() || {};
+        const sharedChecklist = commonData.sharedChecklist || [];
+        
+        const newTask = {
+            id: Date.now().toString(),
+            text,
+            completed: false,
+            priority,
+            createdAt: new Date().toISOString(),
+            createdBy: getUserDisplayName()
+        };
+        
+        sharedChecklist.push(newTask);
+        
+        await commonRef.set({ ...commonData, sharedChecklist }, { merge: true });
+        await loadSharedChecklist();
+        closeModal('addTaskModal');
+        showToast('Shared task added successfully!', 'success');
+    } catch (error) {
+        console.error('Error adding shared task:', error);
+        showToast('Failed to add shared task', 'error');
+    }
+}
+
+async function handleAddTip(e) {
+    e.preventDefault();
+    
+    const title = document.getElementById('tipTitle').value.trim();
+    const content = document.getElementById('tipContent').value.trim();
+    const category = document.getElementById('tipCategory').value;
+    const icon = document.getElementById('tipIcon').value;
+    
+    if (!title || !content || !category) {
+        showToast('Please fill in all required fields', 'error');
+        return;
+    }
+    
+    if (!currentUser) {
+        showToast('You must be logged in to add tips', 'error');
+        return;
+    }
+    
+    try {
+        const commonRef = db.collection('common').doc('data');
+        const commonDoc = await commonRef.get();
+        const commonData = commonDoc.data() || {};
+        const tips = commonData.tips || [];
+        
+        const newTip = {
+            id: Date.now().toString(),
+            title,
+            content,
+            category,
+            icon: icon || 'fas fa-lightbulb',
+            createdAt: new Date().toISOString(),
+            createdBy: getUserDisplayName()
+        };
+        
+        tips.push(newTip);
+        
+        await commonRef.set({ ...commonData, tips }, { merge: true });
+        await loadTips();
+        closeModal('addTipModal');
+        showToast('Tip added successfully!', 'success');
+    } catch (error) {
+        console.error('Error adding tip:', error);
+        showToast('Failed to add tip', 'error');
+    }
+}
+
+async function handleAddEvent(e) {
+    e.preventDefault();
+    
+    const title = document.getElementById('eventTitle').value.trim();
+    const description = document.getElementById('eventDescription').value.trim();
+    const date = document.getElementById('eventDate').value;
+    const priority = document.getElementById('eventPriority').value;
+    
+    if (!title || !description || !date) {
+        showToast('Please fill in all required fields', 'error');
+        return;
+    }
+    
+    if (!currentUser) {
+        showToast('You must be logged in to add events', 'error');
+        return;
+    }
+    
+    try {
+        const commonRef = db.collection('common').doc('data');
+        const commonDoc = await commonRef.get();
+        const commonData = commonDoc.data() || {};
+        const timeline = commonData.timeline || [];
+        
+        const newEvent = {
+            id: Date.now().toString(),
+            title,
+            description,
+            date,
+            priority,
+            createdAt: new Date().toISOString(),
+            createdBy: getUserDisplayName()
+        };
+        
+        timeline.push(newEvent);
+        
+        await commonRef.set({ ...commonData, timeline }, { merge: true });
+        await loadTimeline();
+        closeModal('addEventModal');
+        showToast('Timeline event added successfully!', 'success');
+    } catch (error) {
+        console.error('Error adding timeline event:', error);
+        showToast('Failed to add timeline event', 'error');
+    }
+}
 
 // Mobile menu toggle function
 function toggleMobileMenu() {

@@ -88,14 +88,29 @@ async function initializeUserData() {
         const userDoc = await db.collection('users').doc(currentUser.uid).get();
         
         if (!userDoc.exists) {
+            // Extract name from email for display
+            const emailName = currentUser.email.split('@')[0];
+            const displayName = emailName.charAt(0).toUpperCase() + emailName.slice(1);
+            
             // Create initial user document with minimal data
             await db.collection('users').doc(currentUser.uid).set({
                 email: currentUser.email,
-                displayName: currentUser.displayName || 'Erasmus Student',
+                displayName: displayName,
                 createdAt: firebase.firestore.FieldValue.serverTimestamp()
             });
             
+            // Update the current user's display name for this session
+            if (!currentUser.displayName) {
+                currentUser.displayName = displayName;
+            }
+            
             console.log('User document created');
+        } else {
+            // Update current user display name if it exists in the document
+            const userData = userDoc.data();
+            if (userData.displayName && !currentUser.displayName) {
+                currentUser.displayName = userData.displayName;
+            }
         }
         
         // Initialize common data if it doesn't exist

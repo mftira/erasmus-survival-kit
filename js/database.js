@@ -22,35 +22,6 @@ async function loadSharedChecklist() {
     }
 }
 
-async function addSharedTask() {
-    const taskText = prompt('Enter new shared task:');
-    if (!taskText || !currentUser) return;
-    
-    try {
-        const commonRef = db.collection('common').doc('data');
-        const commonDoc = await commonRef.get();
-        const commonData = commonDoc.data() || {};
-        const sharedChecklist = commonData.sharedChecklist || [];
-        
-        const newTask = {
-            id: Date.now().toString(),
-            text: taskText,
-            completed: false,
-            createdAt: new Date().toISOString(),
-            createdBy: currentUser.email
-        };
-        
-        sharedChecklist.push(newTask);
-        
-        await commonRef.set({ ...commonData, sharedChecklist }, { merge: true });
-        await loadSharedChecklist();
-        showToast('Shared task added successfully!', 'success');
-    } catch (error) {
-        console.error('Error adding shared task:', error);
-        showToast('Failed to add shared task', 'error');
-    }
-}
-
 async function toggleSharedTask(index) {
     try {
         const commonRef = db.collection('common').doc('data');
@@ -108,52 +79,6 @@ async function loadDocumentsHub() {
     }
 }
 
-async function addDocument() {
-    const title = prompt('Enter document title:');
-    if (!title) return;
-    
-    const description = prompt('Enter document description:');
-    if (!description) return;
-    
-    const url = prompt('Enter document URL:');
-    if (!url) return;
-    
-    const category = prompt('Enter category (e.g., Visa, Housing, Academic):');
-    if (!category) return;
-    
-    const iconOptions = 'Available icons: fas fa-passport, fas fa-home, fas fa-university, fas fa-file-alt, fas fa-id-card, fas fa-plane';
-    const icon = prompt(`Enter icon class (${iconOptions}):`);
-    
-    if (!currentUser) return;
-    
-    try {
-        const commonRef = db.collection('common').doc('data');
-        const commonDoc = await commonRef.get();
-        const commonData = commonDoc.data() || {};
-        const documents = commonData.documents || [];
-        
-        const newDocument = {
-            id: Date.now().toString(),
-            title,
-            description,
-            url,
-            category,
-            icon: icon || 'fas fa-file-alt',
-            createdAt: new Date().toISOString(),
-            createdBy: currentUser.email
-        };
-        
-        documents.push(newDocument);
-        
-        await commonRef.set({ ...commonData, documents }, { merge: true });
-        await loadDocumentsHub();
-        showToast('Document added successfully!', 'success');
-    } catch (error) {
-        console.error('Error adding document:', error);
-        showToast('Failed to add document', 'error');
-    }
-}
-
 async function deleteDocument(index) {
     if (!currentUser || !confirm('Are you sure you want to delete this document?')) return;
     
@@ -190,48 +115,6 @@ async function loadTips() {
     } catch (error) {
         console.error('Error loading tips:', error);
         showToast('Failed to load tips', 'error');
-    }
-}
-
-async function addTip() {
-    const title = prompt('Enter tip title:');
-    if (!title) return;
-    
-    const content = prompt('Enter tip content:');
-    if (!content) return;
-    
-    const category = prompt('Enter category (e.g., Food, Transport, Social, Academic):');
-    if (!category) return;
-    
-    const iconOptions = 'Available icons: fas fa-utensils, fas fa-bus, fas fa-users, fas fa-book, fas fa-lightbulb, fas fa-heart';
-    const icon = prompt(`Enter icon class (${iconOptions}):`);
-    
-    if (!currentUser) return;
-    
-    try {
-        const commonRef = db.collection('common').doc('data');
-        const commonDoc = await commonRef.get();
-        const commonData = commonDoc.data() || {};
-        const tips = commonData.tips || [];
-        
-        const newTip = {
-            id: Date.now().toString(),
-            title,
-            content,
-            category,
-            icon: icon || 'fas fa-lightbulb',
-            createdAt: new Date().toISOString(),
-            createdBy: currentUser.email
-        };
-        
-        tips.push(newTip);
-        
-        await commonRef.set({ ...commonData, tips }, { merge: true });
-        await loadTips();
-        showToast('Tip added successfully!', 'success');
-    } catch (error) {
-        console.error('Error adding tip:', error);
-        showToast('Failed to add tip', 'error');
     }
 }
 
@@ -274,54 +157,6 @@ async function loadTimeline() {
     } catch (error) {
         console.error('Error loading timeline:', error);
         showToast('Failed to load timeline', 'error');
-    }
-}
-
-async function addTimelineEvent() {
-    const title = prompt('Enter event title:');
-    if (!title) return;
-    
-    const description = prompt('Enter event description:');
-    if (!description) return;
-    
-    const date = prompt('Enter event date (YYYY-MM-DD):');
-    if (!date || !isValidDate(date)) {
-        alert('Please enter a valid date in YYYY-MM-DD format');
-        return;
-    }
-    
-    const priority = prompt('Enter priority (high, medium, low):') || 'medium';
-    if (!['high', 'medium', 'low'].includes(priority)) {
-        alert('Priority must be high, medium, or low');
-        return;
-    }
-    
-    if (!currentUser) return;
-    
-    try {
-        const commonRef = db.collection('common').doc('data');
-        const commonDoc = await commonRef.get();
-        const commonData = commonDoc.data() || {};
-        const timeline = commonData.timeline || [];
-        
-        const newEvent = {
-            id: Date.now().toString(),
-            title,
-            description,
-            date,
-            priority,
-            createdAt: new Date().toISOString(),
-            createdBy: currentUser.email
-        };
-        
-        timeline.push(newEvent);
-        
-        await commonRef.set({ ...commonData, timeline }, { merge: true });
-        await loadTimeline();
-        showToast('Timeline event added successfully!', 'success');
-    } catch (error) {
-        console.error('Error adding timeline event:', error);
-        showToast('Failed to add timeline event', 'error');
     }
 }
 

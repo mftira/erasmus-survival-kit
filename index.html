@@ -191,7 +191,7 @@
                             <div class="mb-4 flex flex-col sm:flex-row gap-3 sm:gap-4 sm:justify-between sm:items-center">
                                 <input type="text" id="documentsSearch" placeholder="Search documents..." 
                                        class="flex-1 p-2 md:p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm md:text-base">
-                                <button onclick="addDocument()" 
+                                <button onclick="openModal('addDocumentModal')" 
                                         class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 md:py-3 rounded-lg font-medium text-sm md:text-base whitespace-nowrap">
                                     <i class="fas fa-plus mr-2"></i>Add Document
                                 </button>
@@ -213,7 +213,7 @@
                                 </div>
                             </div>
                             <div class="mb-4">
-                                <button onclick="addSharedTask()" 
+                                <button onclick="openModal('addTaskModal')" 
                                         class="w-full sm:w-auto bg-green-600 hover:bg-green-700 text-white px-4 py-2 md:py-3 rounded-lg font-medium text-sm md:text-base">
                                     <i class="fas fa-plus mr-2"></i>Add Shared Task
                                 </button>
@@ -226,7 +226,7 @@
                             <div class="mb-4 flex flex-col sm:flex-row gap-3 sm:gap-4 sm:justify-between sm:items-center">
                                 <input type="text" id="tipsSearch" placeholder="Search tips..." 
                                        class="flex-1 p-2 md:p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm md:text-base">
-                                <button onclick="addTip()" 
+                                <button onclick="openModal('addTipModal')" 
                                         class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 md:py-3 rounded-lg font-medium text-sm md:text-base whitespace-nowrap">
                                     <i class="fas fa-plus mr-2"></i>Add Tip
                                 </button>
@@ -237,7 +237,7 @@
                         <!-- Timeline -->
                         <div id="timelineTab" class="common-tab-content hidden">
                             <div class="mb-4">
-                                <button onclick="addTimelineEvent()" 
+                                <button onclick="openModal('addEventModal')" 
                                         class="w-full sm:w-auto bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 md:py-3 rounded-lg font-medium text-sm md:text-base">
                                     <i class="fas fa-plus mr-2"></i>Add Event
                                 </button>
@@ -246,6 +246,240 @@
                         </div>
                     </div>
                 </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Forms -->
+    <!-- Add Document Modal -->
+    <div id="addDocumentModal" class="fixed inset-0 bg-gray-600 bg-opacity-50 hidden z-50">
+        <div class="flex items-center justify-center min-h-screen px-4">
+            <div class="bg-white rounded-lg shadow-lg max-w-md w-full p-6">
+                <div class="flex justify-between items-center mb-4">
+                    <h3 class="text-lg font-semibold text-gray-800">Add New Document</h3>
+                    <button onclick="closeModal('addDocumentModal')" class="text-gray-400 hover:text-gray-600">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+                <form id="addDocumentForm" class="space-y-4">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Title *</label>
+                        <input type="text" id="docTitle" required 
+                               class="w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Description *</label>
+                        <textarea id="docDescription" required rows="3"
+                                  class="w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"></textarea>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">URL *</label>
+                        <input type="url" id="docUrl" required 
+                               class="w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                               placeholder="https://example.com">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Category *</label>
+                        <select id="docCategory" required 
+                                class="w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                            <option value="">Select category</option>
+                            <option value="Housing">Housing</option>
+                            <option value="Banking">Banking</option>
+                            <option value="Health">Health</option>
+                            <option value="University">University</option>
+                            <option value="Legal">Legal</option>
+                            <option value="Transport">Transport</option>
+                            <option value="Other">Other</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Icon</label>
+                        <select id="docIcon" 
+                                class="w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                            <option value="fas fa-file-alt">📄 Document</option>
+                            <option value="fas fa-home">🏠 Housing</option>
+                            <option value="fas fa-university">🏛️ Banking</option>
+                            <option value="fas fa-heart">❤️ Health</option>
+                            <option value="fas fa-graduation-cap">🎓 University</option>
+                            <option value="fas fa-passport">📔 Legal</option>
+                            <option value="fas fa-bus">🚌 Transport</option>
+                            <option value="fas fa-file-invoice">📋 Forms</option>
+                        </select>
+                    </div>
+                    <div class="flex space-x-3 pt-4">
+                        <button type="button" onclick="closeModal('addDocumentModal')" 
+                                class="flex-1 bg-gray-300 text-gray-700 py-2 px-4 rounded-lg hover:bg-gray-400">
+                            Cancel
+                        </button>
+                        <button type="submit" 
+                                class="flex-1 bg-blue-600 text-white py-2 px-4 rounded-lg hover:bg-blue-700">
+                            Add Document
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add Shared Task Modal -->
+    <div id="addTaskModal" class="fixed inset-0 bg-gray-600 bg-opacity-50 hidden z-50">
+        <div class="flex items-center justify-center min-h-screen px-4">
+            <div class="bg-white rounded-lg shadow-lg max-w-md w-full p-6">
+                <div class="flex justify-between items-center mb-4">
+                    <h3 class="text-lg font-semibold text-gray-800">Add New Shared Task</h3>
+                    <button onclick="closeModal('addTaskModal')" class="text-gray-400 hover:text-gray-600">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+                <form id="addTaskForm" class="space-y-4">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Task Description *</label>
+                        <input type="text" id="taskText" required 
+                               class="w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"
+                               placeholder="Enter task description">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Priority</label>
+                        <select id="taskPriority" 
+                                class="w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500">
+                            <option value="low">Low</option>
+                            <option value="medium" selected>Medium</option>
+                            <option value="high">High</option>
+                        </select>
+                    </div>
+                    <div class="flex space-x-3 pt-4">
+                        <button type="button" onclick="closeModal('addTaskModal')" 
+                                class="flex-1 bg-gray-300 text-gray-700 py-2 px-4 rounded-lg hover:bg-gray-400">
+                            Cancel
+                        </button>
+                        <button type="submit" 
+                                class="flex-1 bg-green-600 text-white py-2 px-4 rounded-lg hover:bg-green-700">
+                            Add Task
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add Tip Modal -->
+    <div id="addTipModal" class="fixed inset-0 bg-gray-600 bg-opacity-50 hidden z-50">
+        <div class="flex items-center justify-center min-h-screen px-4">
+            <div class="bg-white rounded-lg shadow-lg max-w-md w-full p-6">
+                <div class="flex justify-between items-center mb-4">
+                    <h3 class="text-lg font-semibold text-gray-800">Add New Tip</h3>
+                    <button onclick="closeModal('addTipModal')" class="text-gray-400 hover:text-gray-600">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+                <form id="addTipForm" class="space-y-4">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Title *</label>
+                        <input type="text" id="tipTitle" required 
+                               class="w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"
+                               placeholder="Enter tip title">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Content *</label>
+                        <textarea id="tipContent" required rows="4"
+                                  class="w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"
+                                  placeholder="Enter tip content"></textarea>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Category *</label>
+                        <select id="tipCategory" required 
+                                class="w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500">
+                            <option value="">Select category</option>
+                            <option value="Daily Life">Daily Life</option>
+                            <option value="Transport">Transport</option>
+                            <option value="Communication">Communication</option>
+                            <option value="Banking">Banking</option>
+                            <option value="Safety">Safety</option>
+                            <option value="Social">Social</option>
+                            <option value="Academic">Academic</option>
+                            <option value="Food">Food</option>
+                            <option value="Other">Other</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Icon</label>
+                        <select id="tipIcon" 
+                                class="w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500">
+                            <option value="fas fa-lightbulb">💡 Lightbulb</option>
+                            <option value="fas fa-shopping-cart">🛒 Shopping</option>
+                            <option value="fas fa-bus">🚌 Transport</option>
+                            <option value="fas fa-mobile-alt">📱 Mobile</option>
+                            <option value="fas fa-credit-card">💳 Banking</option>
+                            <option value="fas fa-exclamation-triangle">⚠️ Safety</option>
+                            <option value="fas fa-users">👥 Social</option>
+                            <option value="fas fa-book">📚 Academic</option>
+                            <option value="fas fa-utensils">🍽️ Food</option>
+                            <option value="fas fa-heart">❤️ Health</option>
+                        </select>
+                    </div>
+                    <div class="flex space-x-3 pt-4">
+                        <button type="button" onclick="closeModal('addTipModal')" 
+                                class="flex-1 bg-gray-300 text-gray-700 py-2 px-4 rounded-lg hover:bg-gray-400">
+                            Cancel
+                        </button>
+                        <button type="submit" 
+                                class="flex-1 bg-green-600 text-white py-2 px-4 rounded-lg hover:bg-green-700">
+                            Add Tip
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add Timeline Event Modal -->
+    <div id="addEventModal" class="fixed inset-0 bg-gray-600 bg-opacity-50 hidden z-50">
+        <div class="flex items-center justify-center min-h-screen px-4">
+            <div class="bg-white rounded-lg shadow-lg max-w-md w-full p-6">
+                <div class="flex justify-between items-center mb-4">
+                    <h3 class="text-lg font-semibold text-gray-800">Add New Timeline Event</h3>
+                    <button onclick="closeModal('addEventModal')" class="text-gray-400 hover:text-gray-600">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+                <form id="addEventForm" class="space-y-4">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Title *</label>
+                        <input type="text" id="eventTitle" required 
+                               class="w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                               placeholder="Enter event title">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Description *</label>
+                        <textarea id="eventDescription" required rows="3"
+                                  class="w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                  placeholder="Enter event description"></textarea>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Date *</label>
+                        <input type="date" id="eventDate" required 
+                               class="w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Priority</label>
+                        <select id="eventPriority" 
+                                class="w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                            <option value="low">Low</option>
+                            <option value="medium" selected>Medium</option>
+                            <option value="high">High</option>
+                        </select>
+                    </div>
+                    <div class="flex space-x-3 pt-4">
+                        <button type="button" onclick="closeModal('addEventModal')" 
+                                class="flex-1 bg-gray-300 text-gray-700 py-2 px-4 rounded-lg hover:bg-gray-400">
+                            Cancel
+                        </button>
+                        <button type="submit" 
+                                class="flex-1 bg-blue-600 text-white py-2 px-4 rounded-lg hover:bg-blue-700">
+                            Add Event
+                        </button>
+                    </div>
+                </form>
             </div>
         </div>
     </div>
