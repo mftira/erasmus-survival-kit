@@ -7,6 +7,8 @@ function showHome() {
     document.getElementById('homeSection').classList.remove('hidden');
     currentSection = 'home';
     startCountdown();
+    // Close mobile menu if open
+    closeMobileMenu();
 }
 
 function showCommon() {
@@ -14,6 +16,8 @@ function showCommon() {
     document.getElementById('commonSection').classList.remove('hidden');
     currentSection = 'common';
     showCommonTab('documents');
+    // Close mobile menu if open
+    closeMobileMenu();
 }
 
 function hideAllSections() {
@@ -129,18 +133,18 @@ function createChecklistItem(item, index) {
 
 function createDocumentCard(doc, index) {
     const div = document.createElement('div');
-    div.className = 'document-card bg-white p-6 rounded-lg shadow-md border border-gray-200';
+    div.className = 'document-card bg-white p-4 md:p-6 rounded-lg shadow-md border border-gray-200';
     
     const iconClass = doc.icon ? (doc.icon.includes('text-') ? doc.icon : doc.icon + ' text-blue-600') : 'fas fa-file text-blue-600';
     
     div.innerHTML = `
         <div class="flex items-start">
-            <div class="text-3xl ${iconClass} mr-4"></div>
-            <div class="flex-1">
-                <h3 class="text-lg font-semibold text-gray-800 mb-2">${doc.title}</h3>
-                <p class="text-gray-600 text-sm mb-3">${doc.description}</p>
-                <div class="flex justify-between items-center">
-                    <span class="category text-xs bg-blue-100 text-blue-800 px-2 py-1 rounded">${doc.category}</span>
+            <div class="text-2xl md:text-3xl ${iconClass} mr-3 md:mr-4 flex-shrink-0"></div>
+            <div class="flex-1 min-w-0">
+                <h3 class="text-base md:text-lg font-semibold text-gray-800 mb-2 truncate">${doc.title}</h3>
+                <p class="text-gray-600 text-sm mb-3 line-clamp-2">${doc.description}</p>
+                <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-2">
+                    <span class="category text-xs bg-blue-100 text-blue-800 px-2 py-1 rounded self-start">${doc.category}</span>
                     <div class="flex space-x-2">
                         <a href="${doc.url}" target="_blank" 
                            class="text-blue-600 hover:text-blue-800 text-sm font-medium">
@@ -162,15 +166,15 @@ function createDocumentCard(doc, index) {
 
 function createTipCard(tip, index) {
     const div = document.createElement('div');
-    div.className = 'tip-card bg-white p-6 rounded-lg shadow-md border border-gray-200';
+    div.className = 'tip-card bg-white p-4 md:p-6 rounded-lg shadow-md border border-gray-200';
     
     div.innerHTML = `
         <div class="flex items-start">
-            <div class="text-2xl ${tip.icon} text-green-600 mr-4 mt-1"></div>
-            <div class="flex-1">
-                <div class="flex justify-between items-start mb-2">
-                    <h3 class="text-lg font-semibold text-gray-800">${tip.title}</h3>
-                    <div class="flex items-center space-x-2">
+            <div class="text-xl md:text-2xl ${tip.icon} text-green-600 mr-3 md:mr-4 mt-1 flex-shrink-0"></div>
+            <div class="flex-1 min-w-0">
+                <div class="flex flex-col sm:flex-row sm:justify-between sm:items-start mb-2 gap-2">
+                    <h3 class="text-base md:text-lg font-semibold text-gray-800 truncate">${tip.title}</h3>
+                    <div class="flex items-center space-x-2 flex-shrink-0">
                         <span class="category text-xs bg-green-100 text-green-800 px-2 py-1 rounded">${tip.category}</span>
                         <button onclick="deleteTip(${index})" 
                                 class="text-red-600 hover:text-red-800 text-sm">
@@ -178,7 +182,7 @@ function createTipCard(tip, index) {
                         </button>
                     </div>
                 </div>
-                <p class="text-gray-600">${tip.content}</p>
+                <p class="text-gray-600 text-sm md:text-base leading-relaxed">${tip.content}</p>
                 ${tip.createdBy ? `<div class="text-xs text-gray-500 mt-2">Added by: ${tip.createdBy}</div>` : ''}
             </div>
         </div>
@@ -204,22 +208,22 @@ function createTimelineEvent(event, index) {
                          event.priority === 'medium' ? 'text-yellow-600' : 'text-green-600';
     
     div.innerHTML = `
-        <div class="bg-white p-4 rounded-lg shadow-md border border-gray-200">
-            <div class="flex justify-between items-start mb-2">
-                <h3 class="text-lg font-semibold text-gray-800">${event.title}</h3>
-                <div class="text-right flex items-center space-x-2">
-                    <div>
+        <div class="bg-white p-4 md:p-4 rounded-lg shadow-md border border-gray-200">
+            <div class="flex flex-col sm:flex-row sm:justify-between sm:items-start mb-2 gap-2">
+                <h3 class="text-base md:text-lg font-semibold text-gray-800">${event.title}</h3>
+                <div class="flex items-center justify-between sm:justify-end gap-2">
+                    <div class="text-left sm:text-right">
                         <div class="text-sm text-gray-500">${formatDate(eventDate)}</div>
                         ${event.priority ? `<span class="text-xs ${priorityColor} font-medium">${event.priority}</span>` : ''}
                     </div>
                     <button onclick="deleteTimelineEvent(${index})" 
-                            class="text-red-600 hover:text-red-800 text-sm">
+                            class="text-red-600 hover:text-red-800 text-sm flex-shrink-0">
                         <i class="fas fa-trash"></i>
                     </button>
                 </div>
             </div>
-            <p class="text-gray-600">${event.description}</p>
-            <div class="mt-2 flex justify-between items-center">
+            <p class="text-gray-600 text-sm md:text-base mb-2">${event.description}</p>
+            <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-2">
                 <div class="text-xs text-gray-500">
                     ${isUpcoming ? `In ${Math.ceil((eventDate - now) / (1000 * 60 * 60 * 24))} days` : 
                       isPast ? 'Completed' : 'Today'}
@@ -274,4 +278,42 @@ function sharedTaskToggle(index) {
 // Initialize app when DOM is loaded
 document.addEventListener('DOMContentLoaded', () => {
     console.log('Erasmus Survival Kit initialized');
+    
+    // Setup mobile menu toggle
+    const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+    if (mobileMenuBtn) {
+        mobileMenuBtn.addEventListener('click', toggleMobileMenu);
+    }
 });
+
+// Mobile menu toggle function
+function toggleMobileMenu() {
+    const mobileMenu = document.getElementById('mobileMenu');
+    const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+    const icon = mobileMenuBtn.querySelector('i');
+    
+    if (mobileMenu.classList.contains('hidden')) {
+        mobileMenu.classList.remove('hidden');
+        icon.classList.remove('fa-bars');
+        icon.classList.add('fa-times');
+    } else {
+        mobileMenu.classList.add('hidden');
+        icon.classList.remove('fa-times');
+        icon.classList.add('fa-bars');
+    }
+}
+
+// Close mobile menu
+function closeMobileMenu() {
+    const mobileMenu = document.getElementById('mobileMenu');
+    const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+    const icon = mobileMenuBtn ? mobileMenuBtn.querySelector('i') : null;
+    
+    if (mobileMenu && !mobileMenu.classList.contains('hidden')) {
+        mobileMenu.classList.add('hidden');
+        if (icon) {
+            icon.classList.remove('fa-times');
+            icon.classList.add('fa-bars');
+        }
+    }
+}

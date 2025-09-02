@@ -45,9 +45,17 @@
             <div class="flex justify-between items-center">
                 <div class="flex items-center space-x-2">
                     <i class="fas fa-graduation-cap text-2xl"></i>
-                    <h1 class="text-xl font-bold">Erasmus Survival Kit</h1>
+                    <h1 class="text-lg md:text-xl font-bold hidden sm:block">Erasmus Survival Kit</h1>
+                    <h1 class="text-lg font-bold sm:hidden">Erasmus Kit</h1>
                 </div>
-                <div class="flex space-x-6">
+                
+                <!-- Mobile menu button -->
+                <button id="mobileMenuBtn" class="md:hidden focus:outline-none">
+                    <i class="fas fa-bars text-xl"></i>
+                </button>
+                
+                <!-- Desktop navigation -->
+                <div class="hidden md:flex space-x-6">
                     <a href="#" onclick="showHome()" class="hover:text-blue-200 transition-colors">
                         <i class="fas fa-home mr-1"></i>Home
                     </a>
@@ -59,31 +67,46 @@
                     </a>
                 </div>
             </div>
+            
+            <!-- Mobile navigation menu -->
+            <div id="mobileMenu" class="md:hidden mt-4 hidden">
+                <div class="flex flex-col space-y-3 pb-4">
+                    <a href="#" onclick="showHome()" class="hover:text-blue-200 transition-colors py-2 px-4 rounded">
+                        <i class="fas fa-home mr-2"></i>Home
+                    </a>
+                    <a href="#" onclick="showCommon()" class="hover:text-blue-200 transition-colors py-2 px-4 rounded">
+                        <i class="fas fa-users mr-2"></i>Common Section
+                    </a>
+                    <a href="#" onclick="logout()" class="hover:text-red-200 transition-colors py-2 px-4 rounded">
+                        <i class="fas fa-sign-out-alt mr-2"></i>Logout
+                    </a>
+                </div>
+            </div>
         </div>
     </nav>
 
     <!-- Login Section -->
-    <div id="loginSection" class="flex items-center justify-center min-h-screen">
-        <div class="bg-white p-8 rounded-lg shadow-lg max-w-md w-full mx-4">
-            <div class="text-center mb-8">
-                <i class="fas fa-graduation-cap text-6xl text-blue-600 mb-4"></i>
-                <h1 class="text-3xl font-bold text-gray-800 mb-2">Erasmus Survival Kit</h1>
-                <p class="text-gray-600">Your journey starts here</p>
+    <div id="loginSection" class="flex items-center justify-center min-h-screen px-4">
+        <div class="bg-white p-6 md:p-8 rounded-lg shadow-lg max-w-md w-full">
+            <div class="text-center mb-6 md:mb-8">
+                <i class="fas fa-graduation-cap text-4xl md:text-6xl text-blue-600 mb-3 md:mb-4"></i>
+                <h1 class="text-2xl md:text-3xl font-bold text-gray-800 mb-2">Erasmus Survival Kit</h1>
+                <p class="text-gray-600 text-sm md:text-base">Your journey starts here</p>
             </div>
             
             <div class="space-y-4">
                 <form id="emailForm" class="space-y-4">
                     <input type="email" id="email" placeholder="Enter your email" required 
-                           class="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                           class="w-full p-3 text-base border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
                     <input type="password" id="password" placeholder="Enter your password" required 
-                           class="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
-                    <button type="submit" class="w-full bg-blue-600 text-white py-3 px-4 rounded-lg hover:bg-blue-700 transition-colors">
+                           class="w-full p-3 text-base border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    <button type="submit" class="w-full bg-blue-600 text-white py-3 px-4 rounded-lg hover:bg-blue-700 transition-colors text-base font-medium">
                         <i class="fas fa-sign-in-alt mr-2"></i>
                         Sign In
                     </button>
                 </form>
                 
-                <div class="text-center text-sm text-gray-600">
+                <div class="text-center text-xs md:text-sm text-gray-600">
                     Use the credentials provided by your Erasmus coordinator
                 </div>
             </div>
@@ -93,22 +116,22 @@
     <!-- Main Content -->
     <div id="mainContent" class="hidden">
         <!-- Home Section -->
-        <div id="homeSection" class="container mx-auto px-4 py-8">
+        <div id="homeSection" class="container mx-auto px-4 py-6 md:py-8">
             <div class="max-w-4xl mx-auto">
-                <div class="bg-white rounded-lg shadow-lg p-8 mb-8">
+                <div class="bg-white rounded-lg shadow-lg p-6 md:p-8 mb-6 md:mb-8">
                     <div class="text-center">
-                        <i class="fas fa-graduation-cap text-6xl text-blue-600 mb-4"></i>
-                        <h1 class="text-4xl font-bold text-gray-800 mb-4">Welcome to Erasmus Survival Kit!</h1>
-                        <p class="text-lg text-gray-600 mb-8">Your shared resource hub for the Erasmus experience</p>
+                        <i class="fas fa-graduation-cap text-4xl md:text-6xl text-blue-600 mb-3 md:mb-4"></i>
+                        <h1 class="text-2xl md:text-4xl font-bold text-gray-800 mb-3 md:mb-4">Welcome to Erasmus Survival Kit!</h1>
+                        <p class="text-base md:text-lg text-gray-600 mb-6 md:mb-8">Your shared resource hub for the Erasmus experience</p>
                     </div>
                     
                     <!-- Countdown Timer -->
-                    <div class="bg-gradient-to-r from-blue-500 to-purple-600 text-white p-6 rounded-lg mb-8">
-                        <h2 class="text-2xl font-bold text-center mb-4">
+                    <div class="bg-gradient-to-r from-blue-500 to-purple-600 text-white p-4 md:p-6 rounded-lg mb-6 md:mb-8">
+                        <h2 class="text-xl md:text-2xl font-bold text-center mb-3 md:mb-4">
                             <i class="fas fa-clock mr-2"></i>Countdown to Departure
                         </h2>
-                        <div id="countdown" class="text-center text-3xl font-bold"></div>
-                        <p class="text-center mt-2 opacity-90">September 22, 2025</p>
+                        <div id="countdown" class="text-center text-2xl md:text-3xl font-bold"></div>
+                        <p class="text-center mt-2 opacity-90 text-sm md:text-base">September 22, 2025</p>
                     </div>
                     
                     <!-- Quick Access Cards -->
@@ -117,8 +140,8 @@
                             <h3 class="text-xl font-bold text-green-800 mb-3">
                                 <i class="fas fa-users mr-2"></i>Common Section
                             </h3>
-                            <p class="text-green-600 mb-4">Access shared documents, tips, and group tasks</p>
-                            <button onclick="showCommon()" class="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700 transition-colors">
+                            <p class="text-green-600 mb-4 text-sm md:text-base">Access shared documents, tips, and group tasks</p>
+                            <button onclick="showCommon()" class="w-full md:w-auto bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700 transition-colors">
                                 Explore Common Area
                             </button>
                         </div>
@@ -128,53 +151,61 @@
         </div>
 
         <!-- Common Section -->
-        <div id="commonSection" class="container mx-auto px-4 py-8 hidden">
+        <div id="commonSection" class="container mx-auto px-4 py-6 md:py-8 hidden">
             <div class="max-w-6xl mx-auto">
-                <h1 class="text-3xl font-bold text-gray-800 mb-8">
+                <h1 class="text-2xl md:text-3xl font-bold text-gray-800 mb-6 md:mb-8 text-center md:text-left">
                     <i class="fas fa-users mr-3"></i>Common Section
                 </h1>
                 
                 <!-- Tab Navigation -->
-                <div class="bg-white rounded-lg shadow-lg mb-8">
+                <div class="bg-white rounded-lg shadow-lg mb-6 md:mb-8">
                     <div class="border-b border-gray-200">
-                        <nav class="flex space-x-8 px-6">
-                            <button onclick="showCommonTab('documents')" class="common-tab-btn py-4 text-sm font-medium border-b-2 border-transparent hover:text-blue-600 hover:border-blue-300 active" data-tab="documents">
-                                <i class="fas fa-file-alt mr-1"></i>Documents Hub
+                        <nav class="flex overflow-x-auto px-4 md:px-6 no-scrollbar">
+                            <button onclick="showCommonTab('documents')" class="common-tab-btn py-3 md:py-4 px-3 md:px-4 text-xs md:text-sm font-medium border-b-2 border-transparent hover:text-blue-600 hover:border-blue-300 active whitespace-nowrap" data-tab="documents">
+                                <i class="fas fa-file-alt mr-1"></i>
+                                <span class="hidden sm:inline">Documents Hub</span>
+                                <span class="sm:hidden">Docs</span>
                             </button>
-                            <button onclick="showCommonTab('checklist')" class="common-tab-btn py-4 text-sm font-medium border-b-2 border-transparent hover:text-blue-600 hover:border-blue-300" data-tab="checklist">
-                                <i class="fas fa-tasks mr-1"></i>Shared Checklist
+                            <button onclick="showCommonTab('checklist')" class="common-tab-btn py-3 md:py-4 px-3 md:px-4 text-xs md:text-sm font-medium border-b-2 border-transparent hover:text-blue-600 hover:border-blue-300 whitespace-nowrap" data-tab="checklist">
+                                <i class="fas fa-tasks mr-1"></i>
+                                <span class="hidden sm:inline">Shared Checklist</span>
+                                <span class="sm:hidden">Tasks</span>
                             </button>
-                            <button onclick="showCommonTab('tips')" class="common-tab-btn py-4 text-sm font-medium border-b-2 border-transparent hover:text-blue-600 hover:border-blue-300" data-tab="tips">
-                                <i class="fas fa-lightbulb mr-1"></i>Tips & Tricks
+                            <button onclick="showCommonTab('tips')" class="common-tab-btn py-3 md:py-4 px-3 md:px-4 text-xs md:text-sm font-medium border-b-2 border-transparent hover:text-blue-600 hover:border-blue-300 whitespace-nowrap" data-tab="tips">
+                                <i class="fas fa-lightbulb mr-1"></i>
+                                <span class="hidden sm:inline">Tips & Tricks</span>
+                                <span class="sm:hidden">Tips</span>
                             </button>
-                            <button onclick="showCommonTab('timeline')" class="common-tab-btn py-4 text-sm font-medium border-b-2 border-transparent hover:text-blue-600 hover:border-blue-300" data-tab="timeline">
-                                <i class="fas fa-calendar-alt mr-1"></i>Timeline
+                            <button onclick="showCommonTab('timeline')" class="common-tab-btn py-3 md:py-4 px-3 md:px-4 text-xs md:text-sm font-medium border-b-2 border-transparent hover:text-blue-600 hover:border-blue-300 whitespace-nowrap" data-tab="timeline">
+                                <i class="fas fa-calendar-alt mr-1"></i>
+                                <span class="hidden sm:inline">Timeline</span>
+                                <span class="sm:hidden">Timeline</span>
                             </button>
                         </nav>
                     </div>
                     
                     <!-- Tab Content -->
-                    <div class="p-6">
+                    <div class="p-4 md:p-6">
                         <!-- Documents Hub -->
                         <div id="documentsTab" class="common-tab-content">
-                            <div class="mb-4 flex justify-between items-center">
+                            <div class="mb-4 flex flex-col sm:flex-row gap-3 sm:gap-4 sm:justify-between sm:items-center">
                                 <input type="text" id="documentsSearch" placeholder="Search documents..." 
-                                       class="flex-1 max-w-md p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                                       class="flex-1 p-2 md:p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm md:text-base">
                                 <button onclick="addDocument()" 
-                                        class="ml-4 bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg font-medium">
+                                        class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 md:py-3 rounded-lg font-medium text-sm md:text-base whitespace-nowrap">
                                     <i class="fas fa-plus mr-2"></i>Add Document
                                 </button>
                             </div>
-                            <div id="documentsHub" class="grid md:grid-cols-2 lg:grid-cols-3 gap-6"></div>
+                            <div id="documentsHub" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6"></div>
                         </div>
                         
                         <!-- Shared Checklist -->
                         <div id="checklistTab" class="common-tab-content hidden">
                             <div class="mb-4">
-                                <div class="bg-gray-100 p-4 rounded-lg">
+                                <div class="bg-gray-100 p-3 md:p-4 rounded-lg">
                                     <div class="flex justify-between items-center">
-                                        <span class="font-medium">Group Progress:</span>
-                                        <span id="sharedProgress" class="text-blue-600 font-bold">0% Complete</span>
+                                        <span class="font-medium text-sm md:text-base">Group Progress:</span>
+                                        <span id="sharedProgress" class="text-blue-600 font-bold text-sm md:text-base">0% Complete</span>
                                     </div>
                                     <div class="bg-gray-200 rounded-full h-2 mt-2">
                                         <div id="sharedProgressBar" class="bg-green-600 h-2 rounded-full transition-all duration-300" style="width: 0%"></div>
@@ -183,7 +214,7 @@
                             </div>
                             <div class="mb-4">
                                 <button onclick="addSharedTask()" 
-                                        class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg font-medium">
+                                        class="w-full sm:w-auto bg-green-600 hover:bg-green-700 text-white px-4 py-2 md:py-3 rounded-lg font-medium text-sm md:text-base">
                                     <i class="fas fa-plus mr-2"></i>Add Shared Task
                                 </button>
                             </div>
@@ -192,11 +223,11 @@
                         
                         <!-- Tips & Tricks -->
                         <div id="tipsTab" class="common-tab-content hidden">
-                            <div class="mb-4 flex justify-between items-center">
+                            <div class="mb-4 flex flex-col sm:flex-row gap-3 sm:gap-4 sm:justify-between sm:items-center">
                                 <input type="text" id="tipsSearch" placeholder="Search tips..." 
-                                       class="flex-1 max-w-md p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                                       class="flex-1 p-2 md:p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm md:text-base">
                                 <button onclick="addTip()" 
-                                        class="ml-4 bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg font-medium">
+                                        class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 md:py-3 rounded-lg font-medium text-sm md:text-base whitespace-nowrap">
                                     <i class="fas fa-plus mr-2"></i>Add Tip
                                 </button>
                             </div>
@@ -207,11 +238,11 @@
                         <div id="timelineTab" class="common-tab-content hidden">
                             <div class="mb-4">
                                 <button onclick="addTimelineEvent()" 
-                                        class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg font-medium">
+                                        class="w-full sm:w-auto bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 md:py-3 rounded-lg font-medium text-sm md:text-base">
                                     <i class="fas fa-plus mr-2"></i>Add Event
                                 </button>
                             </div>
-                            <div id="timelineContainer" class="space-y-6"></div>
+                            <div id="timelineContainer" class="space-y-4 md:space-y-6"></div>
                         </div>
                     </div>
                 </div>

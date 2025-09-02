@@ -67,6 +67,10 @@ document.getElementById('emailForm').addEventListener('submit', async (e) => {
 // Logout
 async function logout() {
     try {
+        // Close mobile menu if open
+        if (typeof closeMobileMenu === 'function') {
+            closeMobileMenu();
+        }
         await auth.signOut();
         showToast('Successfully signed out!', 'success');
     } catch (error) {
