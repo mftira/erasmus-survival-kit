@@ -417,6 +417,32 @@ select:focus {
     animation: modalSlideIn 0.3s ease-out;
 }
 
+/* Ensure modals work on mobile */
+.modal-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 9999 !important;
+    pointer-events: auto;
+    touch-action: none;
+}
+
+.modal-container.hidden {
+    pointer-events: none;
+}
+
+.modal-backdrop {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(4px);
+}
+
 @keyframes modalSlideIn {
     from {
         opacity: 0;
@@ -481,12 +507,34 @@ select:focus {
         margin: 1rem;
         max-height: calc(100vh - 2rem);
         overflow-y: auto;
+        width: calc(100% - 2rem);
+        max-width: none;
     }
     
     .form-input,
     .form-select,
     .form-textarea {
         font-size: 16px; /* Prevents zoom on iOS */
+        padding: 12px;
+    }
+    
+    /* Ensure modals are above everything on mobile */
+    .modal-container,
+    [id$="Modal"] {
+        z-index: 9999 !important;
+        position: fixed !important;
+    }
+    
+    /* Better button touch targets */
+    .modal-content button {
+        min-height: 48px;
+        padding: 12px 16px;
+        font-size: 16px;
+    }
+    
+    /* Prevent viewport issues */
+    .modal-content {
+        transform: none !important;
     }
 }
 

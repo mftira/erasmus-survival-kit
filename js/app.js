@@ -304,6 +304,23 @@ document.addEventListener('DOMContentLoaded', () => {
     
     // Setup modal form handlers
     setupModalForms();
+    
+    // Test modal functionality
+    console.log('Testing modal elements...');
+    const testModal = document.getElementById('addDocumentModal');
+    console.log('addDocumentModal found:', !!testModal);
+    
+    // Add simple click listeners as backup
+    const modalButtons = document.querySelectorAll('button[onclick*="openModal"]');
+    console.log('Found modal buttons:', modalButtons.length);
+    modalButtons.forEach((btn, index) => {
+        console.log(`Button ${index}:`, btn.textContent.trim());
+        btn.addEventListener('click', function(e) {
+            console.log('Button clicked:', this.textContent.trim());
+            const onclick = this.getAttribute('onclick');
+            console.log('Onclick attribute:', onclick);
+        });
+    });
 });
 
 // Setup modal form handlers
@@ -334,7 +351,7 @@ function setupModalForms() {
     
     // Close modals when clicking outside
     document.addEventListener('click', (e) => {
-        if (e.target.classList.contains('bg-opacity-50')) {
+        if (e.target.classList.contains('bg-opacity-50') || e.target.style.backgroundColor === 'rgba(0, 0, 0, 0.5)') {
             const modals = ['addDocumentModal', 'addTaskModal', 'addTipModal', 'addEventModal'];
             modals.forEach(modalId => {
                 const modal = document.getElementById(modalId);
@@ -357,30 +374,74 @@ function setupModalForms() {
             });
         }
     });
+    
+    // Add touch event listeners for mobile buttons
+    const addButtons = document.querySelectorAll('[onclick*="openModal"]');
+    addButtons.forEach(button => {
+        button.addEventListener('touchstart', function(e) {
+            console.log('Touch started on button:', this.textContent); // Debug log
+        }, { passive: true });
+        
+        button.addEventListener('touchend', function(e) {
+            console.log('Touch ended on button:', this.textContent); // Debug log
+            e.preventDefault();
+            // Extract modal ID from onclick attribute
+            const onclickAttr = this.getAttribute('onclick');
+            const modalMatch = onclickAttr.match(/openModal\('([^']+)'\)/);
+            if (modalMatch) {
+                const modalId = modalMatch[1];
+                console.log('Opening modal via touch:', modalId); // Debug log
+                openModal(modalId);
+            }
+        });
+    });
 }
 
 // Modal management functions
 function openModal(modalId) {
+    console.log('Opening modal:', modalId); // Debug log
     const modal = document.getElementById(modalId);
     if (modal) {
+        // Ensure modal is visible and touchable
+        modal.style.display = 'flex';
+        modal.style.zIndex = '9999';
         modal.classList.remove('hidden');
-        // Focus on first input
+        
+        // Prevent body scroll on mobile
+        document.body.style.overflow = 'hidden';
+        
+        // Focus on first input after a short delay
         const firstInput = modal.querySelector('input, textarea, select');
         if (firstInput) {
-            setTimeout(() => firstInput.focus(), 100);
+            setTimeout(() => {
+                firstInput.focus();
+                console.log('Focused on:', firstInput); // Debug log
+            }, 100);
         }
+        
+        console.log('Modal opened successfully'); // Debug log
+    } else {
+        console.error('Modal not found:', modalId); // Debug log
     }
 }
 
 function closeModal(modalId) {
+    console.log('Closing modal:', modalId); // Debug log
     const modal = document.getElementById(modalId);
     if (modal) {
         modal.classList.add('hidden');
+        modal.style.display = 'none';
+        
+        // Restore body scroll
+        document.body.style.overflow = '';
+        
         // Reset form
         const form = modal.querySelector('form');
         if (form) {
             form.reset();
         }
+        
+        console.log('Modal closed successfully'); // Debug log
     }
 }
 
