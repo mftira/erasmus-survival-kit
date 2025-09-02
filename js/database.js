@@ -1,126 +1,5 @@
 // Database operations for Firestore
 
-// Personal Checklist Functions
-async function loadPersonalChecklist() {
-    if (!currentUser) return;
-    
-    try {
-        const userDoc = await db.collection('users').doc(currentUser.uid).get();
-        const userData = userDoc.data();
-        const checklist = userData.checklist || [];
-        
-        const checklistContainer = document.getElementById('personalChecklist');
-        checklistContainer.innerHTML = '';
-        
-        checklist.forEach((item, index) => {
-            const itemElement = createChecklistItem(item, index, 'personal');
-            checklistContainer.appendChild(itemElement);
-        });
-        
-        updatePersonalProgress();
-    } catch (error) {
-        console.error('Error loading personal checklist:', error);
-        showToast('Failed to load personal checklist', 'error');
-    }
-}
-
-async function addPersonalTask() {
-    const taskText = prompt('Enter new task:');
-    if (!taskText || !currentUser) return;
-    
-    try {
-        const userRef = db.collection('users').doc(currentUser.uid);
-        const userDoc = await userRef.get();
-        const userData = userDoc.data();
-        const checklist = userData.checklist || [];
-        
-        const newTask = {
-            id: Date.now().toString(),
-            text: taskText,
-            completed: false,
-            createdAt: new Date().toISOString()
-        };
-        
-        checklist.push(newTask);
-        
-        await userRef.update({ checklist });
-        await loadPersonalChecklist();
-        showToast('Task added successfully!', 'success');
-    } catch (error) {
-        console.error('Error adding task:', error);
-        showToast('Failed to add task', 'error');
-    }
-}
-
-async function togglePersonalTask(index) {
-    if (!currentUser) return;
-    
-    try {
-        const userRef = db.collection('users').doc(currentUser.uid);
-        const userDoc = await userRef.get();
-        const userData = userDoc.data();
-        const checklist = userData.checklist || [];
-        
-        if (checklist[index]) {
-            checklist[index].completed = !checklist[index].completed;
-            await userRef.update({ checklist });
-            await loadPersonalChecklist();
-        }
-    } catch (error) {
-        console.error('Error toggling task:', error);
-        showToast('Failed to update task', 'error');
-    }
-}
-
-async function deletePersonalTask(index) {
-    if (!currentUser || !confirm('Are you sure you want to delete this task?')) return;
-    
-    try {
-        const userRef = db.collection('users').doc(currentUser.uid);
-        const userDoc = await userRef.get();
-        const userData = userDoc.data();
-        const checklist = userData.checklist || [];
-        
-        checklist.splice(index, 1);
-        await userRef.update({ checklist });
-        await loadPersonalChecklist();
-        showToast('Task deleted successfully!', 'success');
-    } catch (error) {
-        console.error('Error deleting task:', error);
-        showToast('Failed to delete task', 'error');
-    }
-}
-
-// Notes Functions
-async function loadPersonalNotes() {
-    if (!currentUser) return;
-    
-    try {
-        const userDoc = await db.collection('users').doc(currentUser.uid).get();
-        const userData = userDoc.data();
-        const notes = userData.notes || '';
-        
-        document.getElementById('personalNotes').value = notes;
-    } catch (error) {
-        console.error('Error loading notes:', error);
-        showToast('Failed to load notes', 'error');
-    }
-}
-
-async function saveNotes() {
-    if (!currentUser) return;
-    
-    const notes = document.getElementById('personalNotes').value;
-    
-    try {
-        await db.collection('users').doc(currentUser.uid).update({ notes });
-        showToast('Notes saved successfully!', 'success');
-    } catch (error) {
-        console.error('Error saving notes:', error);
-        showToast('Failed to save notes', 'error');
-    }
-}
-
 // Shared Checklist Functions
 async function loadSharedChecklist() {
     try {
@@ -132,7 +11,7 @@ async function loadSharedChecklist() {
         checklistContainer.innerHTML = '';
         
         sharedChecklist.forEach((item, index) => {
-            const itemElement = createChecklistItem(item, index, 'shared');
+            const itemElement = createChecklistItem(item, index);
             checklistContainer.appendChild(itemElement);
         });
         

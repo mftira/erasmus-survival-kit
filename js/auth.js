@@ -84,13 +84,11 @@ async function initializeUserData() {
         const userDoc = await db.collection('users').doc(currentUser.uid).get();
         
         if (!userDoc.exists) {
-            // Create initial user document
+            // Create initial user document with minimal data
             await db.collection('users').doc(currentUser.uid).set({
                 email: currentUser.email,
                 displayName: currentUser.displayName || 'Erasmus Student',
-                createdAt: firebase.firestore.FieldValue.serverTimestamp(),
-                checklist: [],
-                notes: ''
+                createdAt: firebase.firestore.FieldValue.serverTimestamp()
             });
             
             console.log('User document created');

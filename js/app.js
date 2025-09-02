@@ -9,13 +9,6 @@ function showHome() {
     startCountdown();
 }
 
-function showDashboard() {
-    hideAllSections();
-    document.getElementById('dashboardSection').classList.remove('hidden');
-    currentSection = 'dashboard';
-    loadPersonalData();
-}
-
 function showCommon() {
     hideAllSections();
     document.getElementById('commonSection').classList.remove('hidden');
@@ -25,7 +18,6 @@ function showCommon() {
 
 function hideAllSections() {
     document.getElementById('homeSection').classList.add('hidden');
-    document.getElementById('dashboardSection').classList.add('hidden');
     document.getElementById('commonSection').classList.add('hidden');
 }
 
@@ -67,12 +59,6 @@ function showCommonTab(tabName) {
     setTimeout(setupSearchFunctionality, 100);
 }
 
-// Load personal dashboard data
-function loadPersonalData() {
-    loadPersonalChecklist();
-    loadPersonalNotes();
-}
-
 // Countdown timer
 function startCountdown() {
     const targetDate = new Date('2025-09-22T00:00:00').getTime();
@@ -99,33 +85,6 @@ function startCountdown() {
     setInterval(updateCountdown, 1000);
 }
 
-// Progress calculation
-function updatePersonalProgress() {
-    if (!currentUser) return;
-    
-    setTimeout(async () => {
-        try {
-            const userDoc = await db.collection('users').doc(currentUser.uid).get();
-            const userData = userDoc.data();
-            const checklist = userData.checklist || [];
-            
-            const completed = checklist.filter(item => item.completed).length;
-            const total = checklist.length;
-            const percentage = total > 0 ? Math.round((completed / total) * 100) : 0;
-            
-            const progressBar = document.getElementById('progressBar');
-            const progressText = document.getElementById('progressText');
-            
-            if (progressBar && progressText) {
-                progressBar.style.width = percentage + '%';
-                progressText.textContent = `${percentage}% Complete (${completed}/${total} tasks)`;
-            }
-        } catch (error) {
-            console.error('Error updating progress:', error);
-        }
-    }, 100);
-}
-
 function updateSharedProgress(checklist) {
     const completed = checklist.filter(item => item.completed).length;
     const total = checklist.length;
@@ -141,31 +100,28 @@ function updateSharedProgress(checklist) {
 }
 
 // UI Helper Functions
-function createChecklistItem(item, index, type) {
+function createChecklistItem(item, index) {
     const div = document.createElement('div');
     div.className = `checklist-item ${item.completed ? 'completed' : ''}`;
     
     const priorityColor = item.priority === 'high' ? 'text-red-600' : 
                          item.priority === 'medium' ? 'text-yellow-600' : 'text-green-600';
     
-    const toggleFunction = type === 'personal' ? 'personalTaskToggle' : 'sharedTaskToggle';
-    const deleteFunction = type === 'personal' ? 'deletePersonalTask' : 'deleteSharedTask';
-    
     div.innerHTML = `
         <div class="flex items-center justify-between">
             <div class="flex items-center flex-1">
                 <input type="checkbox" ${item.completed ? 'checked' : ''} 
-                       onchange="${toggleFunction}(${index})" 
+                       onchange="sharedTaskToggle(${index})" 
                        class="mr-3 h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded">
                 <span class="task-text flex-1 ${item.completed ? 'line-through text-gray-500' : ''}">${item.text}</span>
                 ${item.priority ? `<span class="text-xs ${priorityColor} font-medium ml-2">${item.priority}</span>` : ''}
             </div>
-            <button onclick="${deleteFunction}(${index})" 
+            <button onclick="deleteSharedTask(${index})" 
                     class="ml-2 text-red-500 hover:text-red-700 text-sm">
                 <i class="fas fa-trash"></i>
             </button>
         </div>
-        ${item.createdBy && type === 'shared' ? `<div class="text-xs text-gray-500 mt-1 ml-7">Added by: ${item.createdBy}</div>` : ''}
+        ${item.createdBy ? `<div class="text-xs text-gray-500 mt-1 ml-7">Added by: ${item.createdBy}</div>` : ''}
     `;
     
     return div;
@@ -311,10 +267,6 @@ function showToast(message, type = 'info') {
 }
 
 // Global task toggle functions
-function personalTaskToggle(index) {
-    togglePersonalTask(index);
-}
-
 function sharedTaskToggle(index) {
     toggleSharedTask(index);
 }

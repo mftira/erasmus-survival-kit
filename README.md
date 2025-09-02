@@ -11,11 +11,6 @@ A comprehensive web application designed for Erasmus students to manage their jo
 - Pre-created accounts for team members
 - Secure user management and session handling
 
-### Personal Dashboard
-- ✅ Personal checklist with progress tracking
-- 📝 Notes section for personal thoughts
-- 📊 Progress visualization
-
 ### Common Section
 - 📋 Shared checklist for group tasks
 - 📚 Documents hub with essential Erasmus papers
@@ -26,7 +21,7 @@ A comprehensive web application designed for Erasmus students to manage their jo
 - 📱 Mobile-responsive design with Tailwind CSS
 - 🎨 Clean, minimal interface
 - 🔍 Search functionality
-- 🌈 Color-coded sections (Blue for personal, Green for common)
+- 🌈 Green color-coded interface for common resources
 
 ## 📁 Project Structure
 
@@ -53,15 +48,15 @@ erasmus-track/
 The app is fully functional with:
 - Firebase Authentication configured
 - Firestore Database connected
-- All features working
+- All shared features working
 - Mobile-optimized interface
 
 ## 👥 User Management
 
-The app supports 5 team members, each with:
-- Personal checklist and notes
+The app supports team members with:
 - Access to shared resources
 - Real-time synchronization
+- Collaborative task management
 
 ## 🔧 Customization
 
@@ -111,8 +106,8 @@ The app is fully responsive and optimized for mobile devices. All features work 
 Your Erasmus team can now:
 1. **Access the app** at https://mftira.github.io/erasmus-survival-kit
 2. **Sign in** with provided credentials
-3. **Manage personal tasks** and notes
-4. **Collaborate** on shared checklists
+3. **Collaborate** on shared checklists
+4. **Access shared resources** and documents
 5. **Stay organized** throughout the Erasmus journey
 
 ## 📄 License
